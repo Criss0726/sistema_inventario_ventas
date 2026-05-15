@@ -39,3 +39,17 @@ INSERT INTO productos (nombre_producto, categoria, stock, precio) VALUES
 
 -- Eliminación de producto descontinuado:
 -- DELETE FROM productos WHERE id = 4;
+
+
+
+
+-- EJERCICIO PRÁCTICO INVENTARIO
+
+-- Actualizar stock del producto ID 5
+-- UPDATE productos SET stock = 45 WHERE id = 5;
+
+-- Actualizar precio y stock del producto ID 8
+-- UPDATE productos SET precio = 149.99, stock = 10 WHERE id = 8;
+
+-- Eliminar producto ID 12
+-- DELETE FROM productos WHERE id = 12;
