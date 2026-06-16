@@ -1,9 +1,9 @@
 <?php
 
 $host = "localhost";
-$db_name = "sistema_inventario";
 $username = "root";
 $password = "";
+$db_name = "sistema_inventario";
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
@@ -20,9 +20,7 @@ try {
 
 } catch (mysqli_sql_exception $e) {
 
-    die(
-        "Error crítico: No se pudo establecer la conexión segura con el servidor de datos."
-    );
+    die("Error de conexión con la base de datos.");
 
 }
 
