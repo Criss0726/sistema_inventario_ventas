@@ -116,6 +116,11 @@ $resultado = $conn->query($sql);
     <div class="header">
 
         <h2>Catálogo de Inventario</h2>
+        
+        <a href="nuevo_producto.php"
+   style="background: #3b82f6; color: white; padding: 10px; text-decoration: none; border-radius: 5px;">
+    + Nuevo Producto
+</a>
 
         <div>
 
