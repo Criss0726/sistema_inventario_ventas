@@ -104,6 +104,19 @@ $resultado = $conn->query($sql);
             color: #dc2626;
             font-weight: bold;
         }
+        .btn-eliminar {
+    background-color: #ef4444;
+    color: white;
+    padding: 6px 12px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.btn-eliminar:hover {
+    background-color: #b91c1c;
+}
 
     </style>
 
@@ -148,6 +161,7 @@ $resultado = $conn->query($sql);
                 <th>Categoría</th>
                 <th>Stock</th>
                 <th>Precio Unitario</th>
+                <th>Acciones</th>
 
             </tr>
 
@@ -189,7 +203,13 @@ $resultado = $conn->query($sql);
                     <td>
                         $<?php echo number_format($fila['precio'], 2); ?>
                     </td>
-
+<td>
+    <a href="eliminar_producto.php?id=<?php echo $fila['id']; ?>"
+       class="btn-eliminar"
+       onclick="return confirm('¿Estás absolutamente seguro de eliminar el producto: <?php echo $fila['nombre_producto']; ?>?');">
+        🗑️ Eliminar
+    </a>
+</td>
                 </tr>
 
         <?php
