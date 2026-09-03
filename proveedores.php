@@ -3,7 +3,6 @@
 session_start();
 
 // 1. Verificar que el usuario haya iniciado sesión
-
 if (!isset($_SESSION['user_id'])) {
 
     header("Location: index.php");
@@ -13,12 +12,9 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // 2. Conectar con la base de datos
-
 require_once 'conexion.php';
 
-
 // 3. Consultar todos los proveedores
-
 $sql = "SELECT * FROM proveedores ORDER BY id ASC";
 
 $resultado = $conn->query($sql);
@@ -138,6 +134,13 @@ $resultado = $conn->query($sql);
         }
 
 
+        .btn-nuevo:hover {
+
+            background: #2563eb;
+
+        }
+
+
         table {
 
             width: 100%;
@@ -208,9 +211,9 @@ $resultado = $conn->query($sql);
     </div>
 
 
-    <!-- Botón preparado para la próxima guía -->
+    <!-- Botón para registrar un nuevo proveedor -->
 
-    <a href="#" class="btn-nuevo">
+    <a href="nuevo_proveedor.php" class="btn-nuevo">
 
         + Nuevo Proveedor
 
