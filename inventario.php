@@ -12,14 +12,47 @@ if (!isset($_SESSION['user_id'])) {
 // 2. Conectar con la base de datos
 require_once 'conexion.php';
 
-// 3. Consulta SQL utilizando INNER JOIN
-$sql = "SELECT p.id, p.nombre_producto, c.nombre_categoria, p.stock, p.precio
-        FROM productos p
-        INNER JOIN categorias c ON p.categoria_id = c.id
-        ORDER BY p.id ASC";
+// 3. Obtener el término de búsqueda
+$busqueda = isset($_GET['buscar']) ? trim($_GET['buscar']) : '';
 
-// 4. Ejecutar la consulta
-$resultado = $conn->query($sql);
+// 4. Si hay una búsqueda, filtrar por nombre o categoría
+if ($busqueda != '') {
+
+    $sql = "SELECT p.id, p.nombre_producto, c.nombre_categoria, p.stock, p.precio
+            FROM productos p
+            INNER JOIN categorias c ON p.categoria_id = c.id
+            WHERE p.nombre_producto LIKE ? 
+               OR c.nombre_categoria LIKE ?
+            ORDER BY p.id ASC";
+
+    // Preparar la consulta
+    $stmt = $conn->prepare($sql);
+
+    // Agregar los comodines %
+    $param_busqueda = "%" . $busqueda . "%";
+
+    // Enviar el mismo parámetro para nombre y categoría
+    $stmt->bind_param("ss", $param_busqueda, $param_busqueda);
+
+    // Ejecutar
+    $stmt->execute();
+
+    // Obtener resultados
+    $resultado = $stmt->get_result();
+
+    // Cerrar sentencia
+    $stmt->close();
+
+} else {
+
+    // 5. Si no hay búsqueda, mostrar todos los productos
+    $sql = "SELECT p.id, p.nombre_producto, c.nombre_categoria, p.stock, p.precio
+            FROM productos p
+            INNER JOIN categorias c ON p.categoria_id = c.id
+            ORDER BY p.id ASC";
+
+    $resultado = $conn->query($sql);
+}
 
 ?>
 
@@ -142,14 +175,10 @@ $resultado = $conn->query($sql);
 
 <div class="container">
 
+    <!-- ENCABEZADO -->
     <div class="header">
 
         <h2>Catálogo de Inventario</h2>
-
-        <a href="nuevo_producto.php"
-           style="background: #3b82f6; color: white; padding: 10px; text-decoration: none; border-radius: 5px;">
-            + Nuevo Producto
-        </a>
 
         <div>
 
@@ -165,6 +194,50 @@ $resultado = $conn->query($sql);
         </div>
 
     </div>
+
+
+    <!-- BARRA DE BÚSQUEDA -->
+
+    <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+
+        <!-- BOTÓN NUEVO PRODUCTO -->
+
+        <a href="nuevo_producto.php"
+           style="background: #3b82f6; color: white; padding: 10px; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            + Nuevo Producto
+        </a>
+
+
+        <!-- FORMULARIO DE BÚSQUEDA -->
+
+        <form method="GET" style="display: flex; gap: 10px;">
+
+            <input
+                type="text"
+                name="buscar"
+                placeholder="Buscar producto o categoría..."
+                value="<?php echo isset($_GET['buscar']) ? $_GET['buscar'] : ''; ?>"
+                style="padding: 8px; border: 1px solid #cbd5e1; border-radius: 4px; width: 250px;"
+            >
+
+            <button
+                type="submit"
+                style="background: #10b981; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                🔍 Buscar
+            </button>
+
+            <a
+                href="inventario.php"
+                style="background: #64748b; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px;">
+                Limpiar
+            </a>
+
+        </form>
+
+    </div>
+
+
+    <!-- TABLA -->
 
     <table>
 
@@ -183,11 +256,12 @@ $resultado = $conn->query($sql);
 
         </thead>
 
+
         <tbody>
 
         <?php
 
-        // 5. Mostrar los productos dinámicamente
+        // Mostrar los productos
 
         if ($resultado->num_rows > 0) {
 
@@ -200,39 +274,60 @@ $resultado = $conn->query($sql);
 
                 <tr>
 
+                    <!-- CÓDIGO -->
+
                     <td>
                         <?php echo $fila['id']; ?>
                     </td>
+
+
+                    <!-- NOMBRE -->
 
                     <td>
                         <?php echo $fila['nombre_producto']; ?>
                     </td>
 
+
+                    <!-- CATEGORÍA -->
+
                     <td>
                         <?php echo $fila['nombre_categoria']; ?>
                     </td>
+
+
+                    <!-- STOCK -->
 
                     <td class="<?php echo $claseStock; ?>">
                         <?php echo $fila['stock']; ?> unds.
                     </td>
 
+
+                    <!-- PRECIO -->
+
                     <td>
                         $<?php echo number_format($fila['precio'], 2); ?>
                     </td>
 
+
                     <!-- ACCIONES -->
+
                     <td>
 
-                        <!-- Botón Editar -->
-                        <a href="editar_producto.php?id=<?php echo $fila['id']; ?>"
-                           class="btn-editar">
+                        <!-- EDITAR -->
+
+                        <a
+                            href="editar_producto.php?id=<?php echo $fila['id']; ?>"
+                            class="btn-editar">
                             ✏️ Editar
                         </a>
 
-                        <!-- Botón Eliminar -->
-                        <a href="eliminar_producto.php?id=<?php echo $fila['id']; ?>"
-                           class="btn-eliminar"
-                           onclick="return confirm('¿Estás absolutamente seguro de eliminar el producto: <?php echo $fila['nombre_producto']; ?>?');">
+
+                        <!-- ELIMINAR -->
+
+                        <a
+                            href="eliminar_producto.php?id=<?php echo $fila['id']; ?>"
+                            class="btn-eliminar"
+                            onclick="return confirm('¿Estás absolutamente seguro de eliminar el producto: <?php echo $fila['nombre_producto']; ?>?');">
                             🗑️ Eliminar
                         </a>
 
@@ -251,7 +346,7 @@ $resultado = $conn->query($sql);
             <tr>
 
                 <td colspan="6" style="text-align:center;">
-                    No hay productos registrados en el sistema.
+                    No se encontraron productos.
                 </td>
 
             </tr>
@@ -268,9 +363,10 @@ $resultado = $conn->query($sql);
 
 </div>
 
+
 <?php
 
-// 6. Liberar memoria
+// Liberar memoria
 $resultado->free();
 
 ?>
