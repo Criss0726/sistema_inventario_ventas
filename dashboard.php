@@ -12,7 +12,6 @@ if (!isset($_SESSION['user_id'])) {
 require_once 'conexion.php';
 
 // --- MÉTRICA 1: Total de Productos en Catálogo ---
-
 $res_total = $conn->query(
     "SELECT COUNT(id) AS cantidad FROM productos"
 );
@@ -23,7 +22,6 @@ $total_productos = $fila_total['cantidad'];
 
 
 // --- MÉTRICA 2: Valor Total del Inventario ---
-
 $res_valor = $conn->query(
     "SELECT SUM(precio * stock) AS capital FROM productos"
 );
@@ -37,7 +35,6 @@ $capital_inventario = $fila_valor['capital']
 
 
 // --- MÉTRICA 3: Producto más caro ---
-
 $res_caro = $conn->query(
     "SELECT MAX(precio) AS max_precio FROM productos"
 );
@@ -49,6 +46,7 @@ $precio_maximo = $fila_caro['max_precio']
     : 0;
 
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -177,11 +175,17 @@ $precio_maximo = $fila_caro['max_precio']
     <div class="navbar">
 
         <h1>
-            Bienvenido, <?php echo $_SESSION['nombre']; ?>
+
+            Bienvenido,
+            <?php echo $_SESSION['nombre']; ?>
 
             <span style="font-size: 14px; color: #94a3b8;">
-                (Rol: <?php echo $_SESSION['rol']; ?>)
+
+                (Rol:
+                <?php echo $_SESSION['rol']; ?>)
+
             </span>
+
         </h1>
 
         <a href="logout.php" class="btn-salir">
@@ -202,7 +206,9 @@ $precio_maximo = $fila_caro['max_precio']
             <h3>Total de Productos</h3>
 
             <p class="numero">
+
                 <?php echo $total_productos; ?> unds
+
             </p>
 
         </div>
@@ -215,7 +221,9 @@ $precio_maximo = $fila_caro['max_precio']
             <h3>Capital Invertido</h3>
 
             <p class="numero">
+
                 $<?php echo number_format($capital_inventario, 2); ?>
+
             </p>
 
         </div>
@@ -228,7 +236,9 @@ $precio_maximo = $fila_caro['max_precio']
             <h3>Producto de Mayor Precio</h3>
 
             <p class="numero">
+
                 $<?php echo number_format($precio_maximo, 2); ?>
+
             </p>
 
         </div>
@@ -239,20 +249,46 @@ $precio_maximo = $fila_caro['max_precio']
     <!-- Accesos Rápidos -->
 
     <h2 style="color: #334155;">
+
         Módulos del Sistema
+
     </h2>
+
 
     <div class="menu-modulos">
 
+        <!-- Módulo de Inventario -->
+
         <a href="inventario.php" class="modulo">
+
             📦 Ir al Catálogo de Inventario
+
         </a>
 
-        <a href="#" class="modulo" style="background:#64748b;">
+
+        <!-- NUEVO: Módulo de Proveedores -->
+
+        <a href="proveedores.php"
+           class="modulo"
+           style="background:#8b5cf6;">
+
+            🚚 Módulo de Proveedores
+
+        </a>
+
+
+        <!-- Punto de Venta -->
+
+        <a href="#"
+           class="modulo"
+           style="background:#64748b;">
+
             🛒 Punto de Venta (Próximamente)
+
         </a>
 
     </div>
+
 
 </body>
 
