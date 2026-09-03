@@ -104,19 +104,35 @@ $resultado = $conn->query($sql);
             color: #dc2626;
             font-weight: bold;
         }
-        .btn-eliminar {
-    background-color: #ef4444;
-    color: white;
-    padding: 6px 12px;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: bold;
-}
 
-.btn-eliminar:hover {
-    background-color: #b91c1c;
-}
+        .btn-eliminar {
+            background-color: #ef4444;
+            color: white;
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .btn-eliminar:hover {
+            background-color: #b91c1c;
+        }
+
+        .btn-editar {
+            background-color: #f59e0b;
+            color: white;
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .btn-editar:hover {
+            background-color: #d97706;
+        }
 
     </style>
 
@@ -129,11 +145,11 @@ $resultado = $conn->query($sql);
     <div class="header">
 
         <h2>Catálogo de Inventario</h2>
-        
+
         <a href="nuevo_producto.php"
-   style="background: #3b82f6; color: white; padding: 10px; text-decoration: none; border-radius: 5px;">
-    + Nuevo Producto
-</a>
+           style="background: #3b82f6; color: white; padding: 10px; text-decoration: none; border-radius: 5px;">
+            + Nuevo Producto
+        </a>
 
         <div>
 
@@ -203,13 +219,25 @@ $resultado = $conn->query($sql);
                     <td>
                         $<?php echo number_format($fila['precio'], 2); ?>
                     </td>
-<td>
-    <a href="eliminar_producto.php?id=<?php echo $fila['id']; ?>"
-       class="btn-eliminar"
-       onclick="return confirm('¿Estás absolutamente seguro de eliminar el producto: <?php echo $fila['nombre_producto']; ?>?');">
-        🗑️ Eliminar
-    </a>
-</td>
+
+                    <!-- ACCIONES -->
+                    <td>
+
+                        <!-- Botón Editar -->
+                        <a href="editar_producto.php?id=<?php echo $fila['id']; ?>"
+                           class="btn-editar">
+                            ✏️ Editar
+                        </a>
+
+                        <!-- Botón Eliminar -->
+                        <a href="eliminar_producto.php?id=<?php echo $fila['id']; ?>"
+                           class="btn-eliminar"
+                           onclick="return confirm('¿Estás absolutamente seguro de eliminar el producto: <?php echo $fila['nombre_producto']; ?>?');">
+                            🗑️ Eliminar
+                        </a>
+
+                    </td>
+
                 </tr>
 
         <?php
@@ -222,7 +250,7 @@ $resultado = $conn->query($sql);
 
             <tr>
 
-                <td colspan="5" style="text-align:center;">
+                <td colspan="6" style="text-align:center;">
                     No hay productos registrados en el sistema.
                 </td>
 
